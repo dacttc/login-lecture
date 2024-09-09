@@ -24,6 +24,7 @@ function login() {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(req),
+            credentials: 'include' // 쿠키를 포함하여 요청 보내기
         })
         .then((res)=>res.json())
         .then((res)=>{
