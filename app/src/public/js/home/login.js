@@ -17,10 +17,10 @@ function login() {
         psword: psword.value
     }
         ;
-
+    
     fetch("/login",
 
-        {
+        {   
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(req),
@@ -31,7 +31,7 @@ function login() {
 
             if(res.success){
 
-                location.href="/";
+               location.href="../"
             }
             else
             {
@@ -39,4 +39,5 @@ function login() {
             }
 
         }).catch(console.error("로그인 중 에러 발생"));
+    
 }

@@ -1,6 +1,14 @@
 "use strict"
 
 const db = require("../config/db");
+db.query('SELECT * FROM service', (err, results) => {
+    if (err) {
+        console.error('쿼리 실행 오류:', err.stack);
+        return;
+    }
+    console.log('쿼리 결과:', results[0].id);
+});
+
 class UserStorage {
 
     static #getUserinfo(data, id) {
@@ -63,5 +71,9 @@ class UserStorage {
             });
 
     }
+
+    
+
 }
+
 module.exports = UserStorage;
