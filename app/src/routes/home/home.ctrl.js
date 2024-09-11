@@ -1,6 +1,6 @@
 "use strict";
 const express = require('express');
-
+const db = require("../../config/db");
 const app = express();
 const cookieParser = require('cookie-parser');
 app.use(cookieParser());
@@ -20,7 +20,10 @@ const output = {
     res.render("home/register")
   },
   mypage: (req, res) => {
+
+
     res.render("home/mypage")
+
   }
 
 };
@@ -28,16 +31,29 @@ const output = {
 
 const process = {
 
-  home: (req, res) => {
+  cookiecheck: (req, res) => {
 
     //  console.log(req.cookies.authToken);
     //homeController.home(req, res);
     const token = req.cookies.authToken; // 클라이언트가 보낸 쿠키에서 토큰을 가져옴
 
     if (!token) {
-      return res.status(403).json({ success: false, message: 'No token provided.' });
-    }
+      db.query('SELECT * FROM service', (err, results) => {
+        if (err) {
+          console.error('쿼리 실행 오류:', err.stack);
+          return;
+        }
 
+      
+          return res.json({
+            ids: null, own: false, message: 'Success',
+            ...results // 결과의 첫 번째 레코드를 응답에 포함
+          });
+      
+
+      });
+    }
+    else{
     // JWT 검증
     jwt.verify(token, 'secretKey', (err, decoded) => {
       if (err) {
@@ -45,42 +61,35 @@ const process = {
       }
 
       // 토큰이 유효하면, 디코딩된 사용자 정보를 요청 객체에 저장
-      req.userId = decoded.id;
-      req.success = true;
-      req.message = 'Success';
-
-      return res.json({ id: req.userId });
 
 
-    });
-  },
+      db.query('SELECT * FROM service', (err, results) => {
+        if (err) {
+          console.error('쿼리 실행 오류:', err.stack);
+          return;
+        }
 
-  getservice: (req, res) => {
+        if (decoded.id == req.body.username) {
+          return res.json({
+            ids: decoded.id, own: true, message: 'Success',
+            ...results // 결과의 첫 번째 레코드를 응답에 포함
+          });
+        }
+        else {
+          return res.json({
+            ids: decoded.id, own: false, message: 'Success',
+            ...results // 결과의 첫 번째 레코드를 응답에 포함
+          });
+        }
 
-    //  console.log(req.cookies.authToken);
-    //homeController.home(req, res);
-    const token = req.cookies.authToken; // 클라이언트가 보낸 쿠키에서 토큰을 가져옴
-
-    if (!token) {
-      return res.status(403).json({ success: false, message: 'No token provided.' });
-    }
-
-    // JWT 검증
-    jwt.verify(token, 'secretKey', (err, decoded) => {
-      if (err) {
-        return res.status(401).json({ success: false, message: 'Failed to authenticate token.' });
-      }
-
-      // 토큰이 유효하면, 디코딩된 사용자 정보를 요청 객체에 저장
-      req.userId = decoded.id;
-      req.success = true;
-      req.message = 'Success';
-
-      return res.json({ id: req.userId });
+      });
+      // return res.json({ id: req.userId });
 
 
     });
+  }
   },
+
   login: async (req, res) => {
     try {
       const user = new User(req.body);

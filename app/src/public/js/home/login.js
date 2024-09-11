@@ -31,7 +31,7 @@ function login() {
 
             if(res.success){
 
-               location.href="../"
+               location.href="../"+id.value;
             }
             else
             {

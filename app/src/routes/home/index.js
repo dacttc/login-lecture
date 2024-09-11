@@ -15,10 +15,13 @@ router.get('/register',ctrl.output.register);
 
 router.post('/register',ctrl.process.register);
 router.post('/login',ctrl.process.login,);
-router.post('/cookiecheck',ctrl.process.home);
+router.post('/cookiecheck',ctrl.process.cookiecheck);
 
-router.get('/', ctrl.output.mypage);
-
+router.get("/:id", ctrl.output.mypage);
+// app.get("/:id", (request, repones) => {
+//     const userName = users[request.params.id - 1];
+//     repones.end(`<h1>${userName}</h1>`);
+//   });
 
 
 module.exports=router;
