@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>관리 페이지</title>
+    <!-- Google Fonts 추가 -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500&display=swap" rel="stylesheet">
+    <!-- 아이콘 폰트 추가 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+    <!-- CSS 파일 추가 -->
+    <link rel="stylesheet" href="style.css">
+    <script src="/js/home/manage.js" defer></script>
+    <link rel="stylesheet" href="/css/home/manage.css">
+</head>
+
+<body>
+    <div class="sidebar">
+        <div class="logo">
+            관리 패널
+        </div>
+        <ul>
+            <li><a href="#" onclick="showPanel('dashboard');" class="active"><i class="fas fa-tachometer-alt"></i>
+                    대시보드</a></li>
+            <li><a href="#" onclick="showPanel('request-list');"><i class="fas fa-inbox"></i> 들어온 요청<span
+                        id="request-count" class="badge">0</span></a></li>
+            <li><a href="#" onclick="showPanel('services');"><i class="fas fa-concierge-bell"></i> 서비스 관리</a></li>
+            <li><a href="#" onclick="showPanel('holidays');"><i class="fas fa-calendar-alt"></i> 휴무일 설정</a></li>
+            <li><a href="#" onclick="showPanel('settings');"><i class="fas fa-cog"></i> 설정</a></li>
+            <li><a href="#" onclick="showPanel('stylists');"><i class="fas fa-user"></i> 스타일리스트 관리</a></li>
+
+        </ul>
+    </div>
+    <div class="main-content">
+        <!-- 대시보드 패널 -->
+        <div id="dashboard" class="content-panel">
+            <h2>대시보드</h2>
+            <p>여기에 주요 통계나 알림 등을 표시할 수 있습니다.</p>
+        </div>
+
+        <!-- 들어온 요청 패널 -->
+        <div id="request-list" class="content-panel" style="display:none;">
+            <h2>들어온 요청</h2>
+            <div id="requestList"></div>
+        </div>
+        <!-- 스타일리스트 관리 패널 -->
+        <div id="stylists" class="content-panel" style="display:none;">
+            <h2>스타일리스트 관리</h2>
+            <div id="stylistList" class="stylist-list">
+                <!-- 스타일리스트 카드가 동적으로 추가됩니다 -->
+                <div class="stylist-card">
+                    <img src="스타일리스트_사진_URL" alt="스타일리스트 이름">
+                    <h3>스타일리스트 이름</h3>
+                    <div class="major-fields">
+                        <span class="major-field">레이어드펌</span>
+                        <span class="major-field">긴머리펌</span>
+                        <span class="major-field">남자애즈펌</span>
+                    </div>
+                    <p>스타일리스트 설명</p>
+                    <div class="stylist-actions">
+                        <button onclick="openEditStylistModal(스타일리스트_ID)">수정</button>
+                        <button onclick="deleteStylist(스타일리스트_ID)">삭제</button>
+                    </div>
+                </div>
+                
+                <!-- 반복 -->
+            </div>
+            <!-- 스타일리스트 추가 버튼 -->
+            <div class="stylist-block add" onclick="openAddStylistModal()">
+                <h3><i class="fas fa-plus"></i></h3>
+                <p>스타일리스트 추가</p>
+            </div>
+        </div>
+
+
+        <!-- 휴무일 설정 패널 -->
+        <div id="holidays" class="content-panel" style="display:none;">
+            <h2>휴무일 설정</h2>
+            <div id="holidayList">
+                <!-- 휴무일 블록이 동적으로 추가됩니다. -->
+            </div>
+            <!-- 휴무일 추가 버튼 -->
+            <div class="holiday-block add" onclick="openAddHolidayModal()">
+                <h3><i class="fas fa-plus"></i></h3>
+                <p>휴무일 추가</p>
+            </div>
+        </div>
+
+        <!-- 설정 패널 -->
+        <div id="settings" class="content-panel" style="display:none;">
+            <h2>설정</h2>
+            <form id="storeSettingsForm">
+                <!-- 매장이름 입력 필드 -->
+                <label for="storeName">매장이름</label>
+                <input type="text" id="storeName" name="storeName" required>
+
+                <!-- 소개글 입력 필드 -->
+                <label for="storeDescription">소개글</label>
+                <textarea id="storeDescription" name="storeDescription" rows="5" required></textarea>
+
+                <!-- 메인사진 업로드 필드 -->
+                <label for="storeMainImage">메인사진</label>
+                <input type="file" id="storeMainImage" name="storeMainImage" accept="image/*" required>
+
+                <!-- 제출 버튼 -->
+                <button type="submit">저장</button>
+            </form>
+        </div>
+        <!-- 스타일리스트 관리 패널 -->
+        <div id="stylists" class="content-panel" style="display:none;">
+            <h2>스타일리스트 관리</h2>
+            <div id="stylistList" class="stylist-list">
+                <!-- 스타일리스트 카드가 동적으로 추가됩니다 -->
+            </div>
+            <!-- 스타일리스트 추가 버튼 -->
+            <div class="stylist-block add" onclick="openAddStylistModal()">
+                <h3><i class="fas fa-plus"> <p>스타일리스트 추가</p></i></h3>
+               
+            </div>
+        </div>
+
+    </div>
+
+    <!-- 스타일리스트 추가 모달 -->
+    <div id="addStylistModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeAddStylistModal()">&times;</span>
+            <h2>스타일리스트 추가</h2>
+            <form id="addStylistForm">
+                <label for="stylistName">이름:</label>
+                <input type="text" id="stylistName" name="stylistName" required>
+
+                <label for="stylistDescription">설명:</label>
+                <textarea id="stylistDescription" name="stylistDescription" rows="4" required></textarea>
+                <label for="stylistMajorFields">메이저 분야:</label>
+                <input type="text" id="stylistMajorFields" name="stylistMajorFields" placeholder="쉼표로 구분하여 입력" required>
+    
+                <label for="stylistPhoto">사진 업로드:</label>
+                <input type="file" id="stylistPhoto" name="stylistPhoto" accept="image/*" required>
+
+                <!-- 추가적인 필드가 필요하다면 여기에 추가 -->
+
+                <button type="submit">추가</button>
+            </form>
+        </div>
+    </div>
+    <!-- 스타일리스트 수정 모달 -->
+    <div id="editStylistModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeEditStylistModal()">&times;</span>
+            <h2>스타일리스트 수정</h2>
+            <form id="editStylistForm">
+                <input type="hidden" id="editStylistId" name="editStylistId">
+
+                <label for="editStylistName">이름:</label>
+                <input type="text" id="editStylistName" name="editStylistName" required>
+
+                <label for="editStylistDescription">설명:</label>
+                <textarea id="editStylistDescription" name="editStylistDescription" rows="4" required></textarea>
+                <label for="editStylistMajorFields">메이저 분야:</label>
+                <input type="text" id="editStylistMajorFields" name="editStylistMajorFields" placeholder="쉼표로 구분하여 입력" required>
+                <label for="editStylistPhoto">사진 변경:</label>
+                <input type="file" id="editStylistPhoto" name="editStylistPhoto" accept="image/*">
+
+                <!-- 추가적인 필드가 필요하다면 여기에 추가 -->
+
+                <button type="submit">수정</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- 서비스 추가 모달 -->
+    <div id="addServiceModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeAddServiceModal()">&times;</span>
+            <h2>서비스 추가</h2>
+            <form id="addServiceForm">
+                <label for="addName">서비스 이름:</label>
+                <input type="text" id="addName" required>
+                <label for="addDuration">소요 시간 (분):</label>
+                <input type="number" id="addDuration" step="30" min="30" required>
+                <label for="addPrice">가격:</label>
+                <input type="text" id="addPrice" required>
+                <label for="service_description">설명:</label>
+                <input type="text" id="service_description" required>
+                <button type="submit">제출</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- 휴무일 추가 모달 -->
+    <div id="addHolidayModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeAddHolidayModal()">&times;</span>
+            <h2>휴무일 추가</h2>
+            <form id="addHolidayForm">
+                <label for="holidayType">휴무일 선택:</label>
+                <select id="holidayType" onchange="toggleHolidayOptions()">
+                    <option value="daily">매일</option>
+                    <option value="weekly">매주</option>
+                    <option value="monthly">매달</option>
+                    <option value="yearly">매년</option>
+                    <option value="specific-day">특정 날짜</option>
+                </select>
+                <div id="weekly-options" class="holiday-options" style="display:none;">
+                    <label for="dayOfWeek">요일 선택:</label>
+                    <select id="dayOfWeek">
+                        <option value="Sunday">일요일</option>
+                        <option value="Monday">월요일</option>
+                        <option value="Tuesday">화요일</option>
+                        <option value="Wednesday">수요일</option>
+                        <option value="Thursday">목요일</option>
+                        <option value="Friday">금요일</option>
+                        <option value="Saturday">토요일</option>
+                    </select>
+                </div>
+                <div id="monthly-options" class="holiday-options" style="display:none;">
+                    <label for="dayOfMonth">날짜 선택 (1 ~ 31):</label>
+                    <input type="number" id="dayOfMonth" min="1" max="31">
+                </div>
+                <div id="yearly-options" class="holiday-options" style="display:none;">
+                    <label for="monthOfYear">달 선택:</label>
+                    <select id="monthOfYear">
+                        <option value="1">1월</option>
+                        <option value="2">2월</option>
+                        <option value="3">3월</option>
+                        <option value="4">4월</option>
+                        <option value="5">5월</option>
+                        <option value="6">6월</option>
+                        <option value="7">7월</option>
+                        <option value="8">8월</option>
+                        <option value="9">9월</option>
+                        <option value="10">10월</option>
+                        <option value="11">11월</option>
+                        <option value="12">12월</option>
+                    </select>
+                    <label for="dayOfYear">날짜 선택:</label>
+                    <input type="number" id="dayOfYear" min="1" max="31">
+                </div>
+                <div id="specific-day-options" class="holiday-options" style="display:none;">
+                    <label for="specificDay">특정 날짜:</label>
+                    <input type="date" id="specificDay">
+                </div>
+                <label for="holidayReason">사유:</label>
+                <input type="text" id="holidayReason" placeholder="사유 입력">
+                <label for="startTime">시작 시간:</label>
+                <input type="time" id="startTime" required>
+                <label for="endTime">종료 시간:</label>
+                <input type="time" id="endTime" required>
+                <button type="submit">추가</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- 휴무일 수정 모달 -->
+    <div id="editHolidayModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeEditHolidayModal()">&times;</span>
+            <h2>휴무일 수정</h2>
+            <form id="editHolidayForm">
+                <label for="editHolidayType">휴무일 선택:</label>
+                <select id="editHolidayType" onchange="toggleEditHolidayOptions()">
+                    <option value="daily">매일</option>
+                    <option value="weekly">매주</option>
+                    <option value="monthly">매달</option>
+                    <option value="yearly">매년</option>
+                    <option value="specific-day">특정 날짜</option>
+                </select>
+                <div id="edit-weekly-options" class="holiday-options" style="display:none;">
+                    <label for="editDayOfWeek">요일 선택:</label>
+                    <select id="editDayOfWeek">
+                        <option value="Sunday">일요일</option>
+                        <option value="Monday">월요일</option>
+                        <option value="Tuesday">화요일</option>
+                        <option value="Wednesday">수요일</option>
+                        <option value="Thursday">목요일</option>
+                        <option value="Friday">금요일</option>
+                        <option value="Saturday">토요일</option>
+                    </select>
+                </div>
+                <div id="edit-monthly-options" class="holiday-options" style="display:none;">
+                    <label for="editDayOfMonth">날짜 선택 (1 ~ 31):</label>
+                    <input type="number" id="editDayOfMonth" min="1" max="31">
+                </div>
+                <div id="edit-yearly-options" class="holiday-options" style="display:none;">
+                    <label for="editMonthOfYear">달 선택:</label>
+                    <select id="editMonthOfYear">
+                        <option value="1">1월</option>
+                        <option value="2">2월</option>
+                        <option value="3">3월</option>
+                        <option value="4">4월</option>
+                        <option value="5">5월</option>
+                        <option value="6">6월</option>
+                        <option value="7">7월</option>
+                        <option value="8">8월</option>
+                        <option value="9">9월</option>
+                        <option value="10">10월</option>
+                        <option value="11">11월</option>
+                        <option value="12">12월</option>
+                    </select>
+                    <label for="editDayOfYear">날짜 선택:</label>
+                    <input type="number" id="editDayOfYear" min="1" max="31">
+                </div>
+                <div id="edit-specific-day-options" class="holiday-options" style="display:none;">
+                    <label for="editSpecificDay">특정 날짜:</label>
+                    <input type="date" id="editSpecificDay">
+                </div>
+                <label for="editHolidayReason">사유:</label>
+                <input type="text" id="editHolidayReason" placeholder="사유 입력">
+                <label for="editStartTime">시작 시간:</label>
+                <input type="time" id="editStartTime" required>
+                <label for="editEndTime">종료 시간:</label>
+                <input type="time" id="editEndTime" required>
+                <button type="submit">수정</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- 서비스 수정 모달 -->
+    <div id="editServiceModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeEditServiceModal()">&times;</span>
+            <h2>서비스 수정</h2>
+            <form id="editServiceForm">
+                <input type="hidden" id="editServiceId" name="editServiceId" />
+                <label for="editName">서비스 이름:</label>
+                <input type="text" id="editName" name="editName" required />
+                <label for="editDuration">소요 시간(분):</label>
+                <input type="number" id="editDuration" name="editDuration" required />
+                <label for="editPrice">가격:</label>
+                <input type="number" id="editPrice" name="editPrice" required />
+                <button type="submit">수정</button>
+            </form>
+        </div>
+    </div>
+</body>
+
+
+</html>

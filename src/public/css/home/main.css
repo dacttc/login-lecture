@@ -1,0 +1,124 @@
+/* ===== CSS 코드 시작 ===== */
+
+/* 기본 테이블 스타일 */
+body {
+    font-family: 'Noto Sans KR', sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #ffffff;
+    color: #333;
+    
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+th, td {
+    padding: 10px;
+    border: 1px solid #ddd;
+    text-align: center;
+    vertical-align: middle;
+}
+
+th {
+    background-color: #4CAF50;
+    color: white;
+}
+
+td.clickable {
+    cursor: pointer;
+}
+
+/* 선택된 셀 스타일 */
+.selected {
+    background-color: #90EE90; /* 연한 녹색 */
+    color: #333;
+}
+
+/* 선택된 셀들의 경계선 제거 */
+.selected {
+    border-bottom: none;
+}
+
+.selected:last-child {
+    border-bottom: 1px solid #ddd;
+}
+
+/* 모달 스타일 */
+#serviceModal, #requestModal {
+    display: none;
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0,0,0,0.4); /* 배경 투명도 */
+}
+
+.modal-content {
+    background-color: #fefefe;
+    margin: 10% auto; /* 화면 중앙에 위치 */
+    padding: 20px;
+    border: 1px solid #888;
+    width: 50%;
+}
+
+/* 버튼 스타일 */
+button {
+    background-color: #4CAF50;
+    color: white;
+    padding: 10px 20px;
+    margin: 5px;
+    border: none;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #45a049;
+}
+
+/* 현재 선택된 서비스 표시 스타일 */
+#current-service {
+    margin-bottom: 10px;
+    font-weight: bold;
+    font-size: 18px;
+}
+
+/* 서비스 목록 스타일 */
+#services div {
+    margin-bottom: 20px;
+}
+/* ===== CSS 코드 시작 ===== */
+
+/* 기존 CSS 코드 유지 */
+
+/* 버튼 컨테이너 스타일 */
+#button-container {
+    display: flex;
+    justify-content: center; /* 버튼들을 가운데 정렬 */
+    flex-wrap: wrap; /* 버튼들이 줄 바꿈되어 정렬될 수 있도록 */
+    margin: 20px 0;
+}
+
+/* 버튼 스타일 */
+#button-container button {
+    background-color: #4CAF50;
+    color: white;
+    padding: 10px 20px;
+    margin: 5px; /* 버튼 사이의 간격 */
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+#button-container button:hover {
+    background-color: #45a049;
+}
+
+/* ===== CSS 코드 끝 ===== */
+
+/* ===== CSS 코드 끝 ===== */

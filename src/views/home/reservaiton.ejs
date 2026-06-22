@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ascented - Beauty Salon</title>
+  <!-- Include Font Awesome for icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f8f9fa;
+      margin: 0;
+      padding: 0;
+      color: #333;
+    }
+
+    h3 {
+      font-size: 1.2rem;
+      font-weight: bold;
+      color: #2c3e50;
+      margin-bottom: 10px;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: 20px auto;
+      padding: 20px;
+      background-color: #ffffff;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      border-radius: 8px;
+    }
+
+    .section {
+      margin-bottom: 30px;
+    }
+
+    .card {
+      background-color: #ecf0f1;
+      padding: 15px;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .services {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+      gap: 15px;
+    }
+
+    .service-item {
+      text-align: center;
+      padding: 10px;
+      background-color: #ffffff;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+      transition: background-color 0.3s ease, transform 0.3s ease;
+    }
+
+    .service-item:hover {
+      background-color: #f1f1f1;
+      transform: translateY(-5px);
+    }
+
+    .service-item i {
+      display: block;
+      font-size: 2rem;
+      margin-bottom: 10px;
+      color: #3498db;
+    }
+
+    .sns-link {
+      color: #2980b9;
+      text-decoration: none;
+      font-weight: bold;
+    }
+
+    .sns-link:hover {
+      text-decoration: underline;
+    }
+
+    .payment-method {
+      background-color: #e0f7fa;
+      padding: 10px;
+      margin-bottom: 10px;
+      border-radius: 4px;
+    }
+
+    .edit-button, .save-button, .add-button, .delete-button {
+      background-color: #2980b9;
+      color: white;
+      border: none;
+      padding: 5px 10px;
+      margin: 10px 0;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    .delete-button {
+      background-color: #e74c3c;
+    }
+
+    .add-button {
+      background-color: #27ae60;
+    }
+
+    .address-section {
+      margin-bottom: 20px;
+      padding: 10px;
+      background-color: #f9f9f9;
+      border-left: 4px solid #2980b9;
+    }
+
+    .service-selection {
+      margin-top: 20px;
+      padding: 10px;
+      background-color: #f4f6f7;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .service-selection select {
+      width: 100%;
+      padding: 8px;
+      margin-bottom: 15px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+    }
+
+    .category-title {
+      font-weight: bold;
+      color: #34495e;
+      margin-top: 15px;
+    }
+
+    .add-button {
+      display: block;
+      margin-top: 10px;
+      background-color: #2ecc71;
+      color: white;
+      padding: 10px;
+      border-radius: 5px;
+      text-align: center;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+
+    .add-button:hover {
+      background-color: #27ae60;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="section" id="address">
+      <h3>주소</h3>
+      <div class="card" id="address-content"></div>
+    </div>
+
+    <div class="section" id="introduction">
+      <h3>소개</h3>
+      <div class="card" id="introduction-content"></div>
+    </div>
+
+    <div class="section" id="services">
+      <h3>편의시설 및 서비스</h3>
+      <div class="services" id="services-content"></div>
+      <div class="service-selection" id="service-selection"></div>
+    </div>
+
+    <div class="section" id="parking">
+      <h3>주차</h3>
+      <div class="card" id="parking-content"></div>
+    </div>
+
+    <div class="section" id="payment-methods">
+      <h3>결제수단</h3>
+      <div id="payment-methods-content"></div>
+    </div>
+
+    <div class="section" id="sns">
+      <h3>SNS</h3>
+      <div class="card" id="sns-content"></div>
+    </div>
+  </div>
+
+  <script>
+    // Admin mode (Set to true for editing mode)
+    const admin = true;
+
+    // Content variables
+    let introductionContent = "*첫방문 고객님 10 % 할인 쿠폰 이벤트* 특별하고 진실된 아름다움이 시작되는곳 Ascented입니다.";
+    let addressContent = "서울특별시 강남구 도산대로 123 5층";
+    let parkingContent = "주차가능 (무료)";
+    let snsLink = "https://www.instagram.com/ascented__";
+    let paymentMethods = ["지역화폐 (모바일형)", "제로페이"];
+    let introduction_services = [
+  { icon: "fas fa-paw", label: "반려동물 동반", available: true },
+  { icon: "fas fa-wifi", label: "무선 인터넷", available: true },
+  { icon: "fas fa-calendar-alt", label: "예약", available: true },
+  { icon: "fas fa-wheelchair", label: "휠체어 이용가능", available: true },
+  
+  // 장애인 및 노인을 위한 추가 서비스
+  { icon: "fas fa-parking", label: "장애인 전용 주차구역", available: true },
+  { icon: "fas fa-ramp-loading", label: "휠체어 램프", available: true },
+  { icon: "fas fa-door-open", label: "넓은 출입구", available: true },
+  { icon: "fas fa-people-carry", label: "방문 미용 서비스", available: true },
+  { icon: "fas fa-blind", label: "시각 장애인 안내 서비스", available: true },
+  { icon: "fas fa-deaf", label: "청각 장애인 수화 지원", available: true },
+  { icon: "fas fa-volume-mute", label: "조용한 서비스 공간 제공", available: true },
+  { icon: "fas fa-hands-helping", label: "치매 고객을 위한 특별 케어", available: true },
+  { icon: "fas fa-users-cog", label: "인지 장애인을 위한 간편 설명", available: true },
+  { icon: "fas fa-shield-alt", label: "안전 구속 기능이 있는 의자", available: true },
+  { icon: "fas fa-ambulance", label: "응급 의료 호출 시스템", available: true }
+];
+
+
+    // Predefined services for selection, categorized
+    const categorizedServices = {
+  네트워크: [
+    { icon: "fas fa-wifi", label: "무선 인터넷" }
+  ],
+  접근성: [
+    { icon: "fas fa-wheelchair", label: "휠체어 이용가능" },
+    { icon: "fas fa-parking", label: "장애인 주차구역" },
+    { icon: "fas fa-ramp-loading", label: "휠체어 램프" },  // 추가된 요소
+    { icon: "fas fa-door-open", label: "넓은 출입구" }    // 추가된 요소
+  ],
+  기타: [
+    { icon: "fas fa-paw", label: "반려동물 동반" },
+    { icon: "fas fa-restroom", label: "남/녀 화장실 구분" },
+    { icon: "fas fa-calendar-alt", label: "예약" }
+  ],
+  방문서비스: [
+    { icon: "fas fa-people-carry", label: "방문 미용 서비스" },  // 추가된 요소
+    { icon: "fas fa-hands-helping", label: "치매 고객을 위한 특별 케어" },  // 추가된 요소
+    { icon: "fas fa-users-cog", label: "인지 장애인을 위한 간편 설명" }  // 추가된 요소
+  ],
+  안전및보호: [
+    { icon: "fas fa-shield-alt", label: "안전 구속 기능이 있는 의자" },  // 추가된 요소
+    { icon: "fas fa-ambulance", label: "응급 의료 호출 시스템" }  // 추가된 요소
+  ],
+  정신건강지원: [
+    { icon: "fas fa-volume-mute", label: "조용한 서비스 공간 제공" },  // 추가된 요소
+    { icon: "fas fa-smile", label: "우울증 고객을 위한 편안한 분위기" }  // 추가된 요소
+  ]
+};
+
+    function updateContent() {
+      // Introduction content
+      document.getElementById("introduction-content").innerHTML = `<p>${introductionContent}</p>`;
+      if (admin) addEditButton("introduction-content", "introductionContent");
+
+      // Address content
+      document.getElementById("address-content").innerHTML = `<p>${addressContent}</p>`;
+      if (admin) addEditButton("address-content", "addressContent");
+
+      // Services content
+      const servicesContent = introduction_services
+        .filter(service => service.available)
+        .map((service, index) => `
+          <div class="service-item">
+            <i class="${service.icon}"></i> ${service.label}
+            ${admin ? `<button class="delete-button" onclick="deleteService(${index})">삭제</button>` : ''}
+          </div>
+        `)
+        .join("");
+      document.getElementById("services-content").innerHTML = servicesContent;
+      if (admin) {
+        showServiceSelection();
+      }
+
+      // Parking content
+      document.getElementById("parking-content").innerHTML = `<p>${parkingContent}</p>`;
+      if (admin) addEditButton("parking-content", "parkingContent");
+
+      // Payment methods
+      const paymentContent = paymentMethods
+        .map((method, index) => `<div class="payment-method">${method} ${admin ? `<button class="delete-button" onclick="deletePayment(${index})">삭제</button>` : ''}</div>`)
+        .join("");
+      document.getElementById("payment-methods-content").innerHTML = paymentContent;
+      if (admin) addAddPaymentButton();
+
+      // SNS link content
+      document.getElementById("sns-content").innerHTML = `<a href="${snsLink}" class="sns-link">${snsLink}</a>`;
+      if (admin) addEditButton("sns-content", "snsLink");
+    }
+
+    function addEditButton(sectionId, variableName) {
+  const section = document.getElementById(sectionId);
+
+  // 기존에 'Edit' 버튼이 중복으로 추가되지 않도록 체크
+  if (!section.querySelector('.edit-button')) {
+    const editButton = document.createElement("button");
+    editButton.className = "edit-button";
+    editButton.innerText = "Edit";
+    editButton.onclick = () => editContent(sectionId, variableName);
+    section.appendChild(editButton);
+  }
+}
+
+function editContent(sectionId, variableName) {
+  const section = document.getElementById(sectionId);
+  const currentContent = window[variableName]; // 글로벌 변수를 참조
+
+  // 기존 내용을 유지하면서 편집 가능한 텍스트 에리어와 저장 버튼 추가
+  const textarea = document.createElement('textarea');
+  textarea.id = `${variableName}-input`;
+  textarea.rows = 4;
+  textarea.style.width = '100%';
+  textarea.value = currentContent;
+
+  const saveButton = document.createElement('button');
+  saveButton.className = 'save-button';
+  saveButton.innerText = 'Save';
+  saveButton.onclick = () => saveContent(sectionId, variableName);
+
+  // 기존 내용을 유지하고 편집 필드 추가
+  section.appendChild(textarea);
+  section.appendChild(saveButton);
+}
+
+function saveContent(sectionId, variableName) {
+  const newValue = document.getElementById(`${variableName}-input`).value;
+  window[variableName] = newValue; // 변수에 새 값을 저장
+
+  // 입력 필드를 제거하고 저장된 값으로 업데이트
+  const section = document.getElementById(sectionId);
+  section.innerHTML = `<p>${newValue}</p>`; // 저장된 값 표시
+
+  // 다시 Edit 버튼 추가
+  addEditButton(sectionId, variableName);
+}
+
+    function deletePayment(index) {
+      paymentMethods.splice(index, 1);
+      updateContent(); // Refresh payment methods
+    }
+
+    function addAddPaymentButton() {
+      const paymentMethodsContent = document.getElementById("payment-methods-content");
+      const addButton = document.createElement("button");
+      addButton.className = "add-button";
+      addButton.innerText = "결제수단 추가";
+      addButton.onclick = addPaymentMethod;
+      paymentMethodsContent.appendChild(addButton);
+    }
+
+    function addPaymentMethod() {
+      const newMethod = prompt("추가할 결제수단을 입력하세요:");
+      if (newMethod) {
+        paymentMethods.push(newMethod);
+        updateContent(); // Refresh payment methods
+      }
+    }
+
+    function deleteService(index) {
+      introduction_services.splice(index, 1);
+      updateContent(); // Refresh services
+    }
+
+    function showServiceSelection() {
+      const serviceSelection = document.getElementById("service-selection");
+      let selectionHTML = '';
+      
+      // Iterate over categorized services
+      for (const [category, services] of Object.entries(categorizedServices)) {
+        selectionHTML += `<div class="category-title">${category}</div>`;
+        selectionHTML += `<select id="service-select-${category}">`;
+        services.forEach(service => {
+          selectionHTML += `<option value="${service.label}">${service.label}</option>`;
+        });
+        selectionHTML += `</select>`;
+      }
+
+      serviceSelection.innerHTML = selectionHTML;
+      serviceSelection.innerHTML += `<button class="add-button" onclick="addService()">서비스 추가</button>`;
+    }
+
+    function addService() {
+      const allCategories = Object.keys(categorizedServices);
+      for (const category of allCategories) {
+        const selectedService = document.getElementById(`service-select-${category}`).value;
+        const serviceToAdd = categorizedServices[category].find(service => service.label === selectedService);
+        if (serviceToAdd && !introduction_services.find(service => service.label === selectedService)) {
+          introduction_services.push({ ...serviceToAdd, available: true });
+        }
+      }
+      updateContent(); // Refresh services
+    }
+
+    updateContent();
+  </script>
+</body>
+</html>

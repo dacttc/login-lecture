@@ -1,5 +1,33 @@
 {
   "dependencies": {
-    "mysql": "^2.18.1"
+    "axios": "^1.7.7",
+    "bcryptjs": "^2.4.3",
+    "body-parser": "^1.20.2",
+    "cookie-parser": "^1.4.6",
+    "dotenv": "^16.4.5",
+    "ejs": "^3.1.10",
+    "express": "^4.21.0",
+    "jsonwebtoken": "^9.0.2",
+    "multer": "^1.4.5-lts.1",
+    "mysql2": "^3.11.0"
+  },
+  "name": "web",
+  "version": "1.0.1",
+  "main": "app.js",
+  "bin": {
+    "web": "app.js"
+  },
+  "scripts": {
+    "start": "node app.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "MIT",
+  "keywords": [],
+  "description": "",
+  "homepahe": "",
+  "repository": {
+    "type": "git",
+    "url": ""
   }
 }

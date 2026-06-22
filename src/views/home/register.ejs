@@ -1,0 +1,121 @@
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR&display=swap" rel="stylesheet">
+    <!-- 아이콘 폰트 추가 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+    <!-- 외부 CSS 파일 연결 -->
+    <script src="/js/home/register.js" defer></script>
+    <title>처음이신가요?</title>
+    <link rel="stylesheet" href="./css/home/login.css">
+    <style>
+        .hidden-content {
+            display: none;
+            background-color: #f9f9f9;
+            padding: 15px;
+            border: 1px solid #e0e0e0;
+            margin-top: 10px;
+            max-height: 200px; /* 고정된 높이 설정 */
+            overflow-y: auto; /* 스크롤 추가 */
+        }
+        .toggle-button {
+            cursor: pointer;
+            color: #007bff;
+            border: none;
+            background: none;
+            font-size: 1em;
+            padding: 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-page">
+        <div class="form">
+          <form class="login-form" id="register-form">
+            <div class="input-group">
+              <i class="fas fa-user"></i>
+              <input type="text" id="id" placeholder="아이디" required/>
+            </div>
+            <div class="input-group">
+              <i class="fas fa-lock"></i>
+              <input type="text" id="name" placeholder="이름" required/>
+            </div>
+            <div class="input-group">
+              <i class="fas fa-user"></i>
+              <input type="password" id="psword" placeholder="비밀번호" required/>
+            </div>
+            <div class="input-group">
+              <i class="fas fa-lock"></i>
+              <input type="password" id="confirm-psword" placeholder="비밀번호 확인" required/>
+            </div>
+
+            <!-- 동의 체크박스 및 개인정보 수집 내용 -->
+            <div class="input-group">
+              <input type="checkbox" id="agree-terms" />
+              <label for="agree-terms">개인정보 수집 및 이용에 동의합니다.</label>
+              <button type="button" class="toggle-button" onclick="toggleDetails()">펼치기</button>
+            </div>
+
+            <div id="details" class="hidden-content">
+                <h3>개인정보 수집·이용 목적</h3>
+                <ul>
+                    <li>서비스 이용을 위한 본인 확인</li>
+                    <li>본인 확인 내역 증빙 작성</li>
+                    <li>웹사이트 회원 탈퇴 처리 지원</li>
+                    <li>개인정보 열람, 정정/삭제, 처리정지 지원</li>
+                </ul>
+
+                <h3>수집하는 개인정보의 항목</h3>
+                <ul>
+                    <li>휴대전화 본인인증: 이름, 내국인 여부, 생년월일, 성별, 휴대폰번호, 통신사</li>
+                    <li>아이핀 본인확인: 이름, 아이핀 ID, 비밀번호</li>
+                    <li>공동인증서 본인확인: 이름, 공동인증서 일련번호</li>
+                    <li>전자금융거래 본인확인: 이름, 생년월일, 카드번호</li>
+                    <li>디지털원패스 본인확인: 이름, 생년월일, 휴대폰번호, 성별, 계좌번호, 내/외국인 여부</li>
+                </ul>
+
+                <h3>개인정보 보유·이용 기간</h3>
+                <p><a href="#">홈페이지 접속(이용) 종료 시까지</a></p>
+
+                <h3>동의 거부 권리 및 동의 거부에 따른 불이익</h3>
+                <p>개인정보 수집·이용에 동의를 거부할 수 있으며, 동의를 거부하시는 경우에는 서비스 이용이 제한됩니다.</p>
+
+                <h3>수집근거</h3>
+                <p>개인정보 보호법 제15조 제3항, 동법 시행령 제22조의2 제1항 4호</p>
+            </div>
+
+            <button id="button" type="submit">회원가입</button>
+            <p class="message" onclick="redirectToRegister()">이미 가입하셨나요? <a>로그인</a></p>
+          </form>
+        </div>
+      </div>
+
+      <ul class="background">
+        <li></li><li></li><li></li><li></li><li></li>
+        <li></li><li></li><li></li><li></li><li></li>
+      </ul>
+
+    <script>
+      // 개인정보 수집 및 이용에 대한 상세 내용을 토글하는 함수
+      function toggleDetails() {
+          const details = document.getElementById('details');
+          if (details.style.display === 'none' || details.style.display === '') {
+              details.style.display = 'block';
+          } else {
+              details.style.display = 'none';
+          }
+      }
+
+      // 회원가입 폼 제출 시 개인정보 동의 여부 확인
+      document.getElementById('register-form').addEventListener('submit', function(event) {
+          const agreeTerms = document.getElementById('agree-terms').checked;
+          
+          if (!agreeTerms) {
+              alert('개인정보 수집 및 이용에 동의해야 회원가입이 가능합니다.');
+              event.preventDefault(); // 폼 제출 방지
+          }
+      });
+    </script>
+</body>
+</html>

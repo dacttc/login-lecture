@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>쿠키 삭제 후 뒤로 가기</title>
+    <script>
+        // 특정 쿠키 삭제 함수
+        function deleteCookie(name) {
+            document.cookie = name + '=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+        }
+
+        // 모든 쿠키 삭제 함수
+        function deleteAllCookies() {
+            const cookies = document.cookie.split(';');
+            cookies.forEach(cookie => {
+                const cookieName = cookie.split('=')[0].trim();
+                deleteCookie(cookieName);
+            });
+        }
+
+        // 쿠키 삭제 후 뒤로가기
+        function deleteCookiesAndGoBack() {
+            deleteAllCookies();  // 모든 쿠키 삭제
+            
+            // 뒤로가기 후 페이지 새로고침
+            window.location.href = document.referrer;  // 이전 페이지 URL로 새로고침
+        }
+
+        // 페이지가 로드되면 자동으로 쿠키 삭제 후 뒤로가기 실행
+        window.onload = function() {
+            deleteCookiesAndGoBack();
+        }
+    </script>
+</head>
+<body>
+    <h1>Logout</h1>
+</body>
+</html>
