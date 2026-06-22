@@ -10,7 +10,8 @@
 ### Register
 ![Register screen](docs/screenshots/register.png)
 
-관리자/예약 화면은 MySQL 샘플 데이터 연결 후 추가 캡처 예정입니다.
+### Admin Dashboard Preview
+![Admin dashboard preview](docs/screenshots/admin-dashboard.png)
 
 ## Tech Stack
 
@@ -47,7 +48,8 @@
 ├── .ebextensions/
 │   └── nodecommand.config
 ├── database/
-│   └── schema.sql
+│   ├── schema.sql
+│   └── seed.sql
 ├── docs/
 │   └── screenshots/
 ├── src/
@@ -97,7 +99,21 @@ mysql -u root -p < database/schema.sql
 
 `database/schema.sql`은 기존 코드에서 사용 중인 테이블과 컬럼을 기준으로 복원한 초기 스키마입니다. 실제 운영 데이터나 상세 제약 조건은 별도 마이그레이션으로 보완할 수 있습니다.
 
-### 4. Run
+### 4. Load sample data
+
+```bash
+mysql -u root -p beauty_salon < database/seed.sql
+```
+
+샘플 데이터에는 매장, 고객, 디자이너, 서비스, 예약 요청, 휴무일, 소식, 리뷰가 포함되어 있습니다.
+
+Demo accounts:
+
+- Store manager: `demo_salon`
+- Customer: `demo_customer`
+- Password: `demo1234`
+
+### 5. Run
 
 ```bash
 npm start
@@ -162,5 +178,5 @@ ALLOW_LEGACY_CLIENT_SQL=false
 - 프론트의 legacy SQL 요청을 명시적인 REST API로 전환
 - DB migration 도구 도입
 - 테스트 코드 추가
-- 관리자/예약 화면 샘플 데이터와 스크린샷 보강
+- 예약 화면 샘플 데이터와 스크린샷 보강
 - 깨진 주석 및 오래된 UI 코드 정리
